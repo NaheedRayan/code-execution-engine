@@ -45,12 +45,12 @@ function runCode(json_msg, channel, msg) {
                         if (err3) {
                             channel.ack(msg);
                             client.setex(json_msg.filename.toString(), 300, '{"status":"An error occured"}');
-                            console.log(err);
+                            console.log(err3);
                         } else {
 
                             console.log('--------------------------------------------------------------------------------------------------------------------')
-                            console.log(stdout);
-                            console.log(stderr);
+                            // console.log(stdout);
+                            // console.log(stderr);
                             fs.readFile("./temp/output.txt", "utf8", function (err4, contents) {
 
                                 if (err4)
@@ -60,6 +60,8 @@ function runCode(json_msg, channel, msg) {
                                     output = contents;
                                     let result = {
                                         'output': output,
+                                        'stdout':stdout,
+                                        'stderr':stderr,
                                         'submission_id': json_msg.filename
                                     }
 
@@ -156,19 +158,11 @@ amqp.connect("amqp://rabbitmq:5672", (error0, connection) => {
 
             // converting message to string and then to json object
             json_msg = JSON.parse(msg.content.toString())
-            console.log("[x] Received %s", json_msg.src);
+            // console.log("[x] Received %s", json_msg.src);
             console.log("[x] Received %s", json_msg.filename);
 
             // when we will receive a message we will create files
             createFiles(json_msg, channel, msg);
-
-            // we are using this timer for testing purpose
-            // setTimeout(function () {
-            //     console.log("[x] Done");
-
-            //     console.log('message acknowledged')
-            //     channel.ack(msg);
-            // }, 15 * 1000);
 
         }, {
             // automatic acknowledgment mode,

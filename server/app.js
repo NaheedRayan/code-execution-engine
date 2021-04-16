@@ -45,8 +45,8 @@ app.post('/submit', (req, res) => {
         "timeout": req.body.timeout, 
         "filename": random(10) 
     }
-    console.log(data_src);
     // console.log(data_src);
+   
     
     if (data_src) {
         // sending data with the help of emitter
@@ -101,7 +101,7 @@ amqp.connect('amqp://rabbitmq:5672', function (error0, connection) {
         console.log('------------------------------------------------Connected server----------------------------------------------------')
         eventEmitter.on("message_received", (data) => {
             channel.sendToQueue(queue, Buffer.from(JSON.stringify(data)));
-            console.log("[x] Sent: %s", data);
+            console.log("[x] Sent: %s file(%s) has been sent", data.lang , data.filename);
             
         })
 

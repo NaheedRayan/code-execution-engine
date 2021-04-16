@@ -25,24 +25,42 @@ services:
     build: ./worker
     restart: always
     # cpus: "1"
-    # mem_limit: 150m
-    
-    
-   
-     
-      
+    # mem_limit: 150m   
 
   worker02:
     build: ./worker
     restart: always
     # cpus: "1"
     # mem_limit: 150m
-  
+   
   worker03:
     build: ./worker
     restart: always
     # cpus: "1"
     # mem_limit: 150m
+  
+
+    
+  worker04:
+    build: ./worker
+    restart: always
+    # cpus: "1"
+    # mem_limit: 150m
+
+  worker05:
+    build: ./worker
+    restart: always
+    # cpus: "1"
+    # mem_limit: 150m
+
+  worker06:
+    build: ./worker
+    restart: always
+    # cpus: "1"
+    # mem_limit: 150m
+
+ 
+
 
 
     #  deploy:
