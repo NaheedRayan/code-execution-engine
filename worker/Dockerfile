@@ -1,11 +1,16 @@
-FROM ubuntu:20.04
+FROM ubuntu:20.04 
+
+ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update -y
 
 # RUN adduser --disabled-password --gecos "" judge
 
+# for gcc 
 RUN apt install curl vim build-essential -y
 
+# for jdk
+RUN apt-get install openjdk-8-jdk -y
 
 RUN curl -sL https://deb.nodesource.com/setup_14.x | bash 
 RUN apt-get install nodejs -y

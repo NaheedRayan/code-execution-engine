@@ -43,7 +43,7 @@ app.post('/submit', (req, res) => {
         "stdin":req.body.stdin,
         "lang" : req.body.lang, 
         "timeout": req.body.timeout, 
-        "filename": random(10) 
+        "filename": "Test"+random(10) 
     }
     // console.log(data_src);
    

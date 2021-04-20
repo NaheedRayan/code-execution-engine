@@ -15,7 +15,8 @@ const extensions = {
     "cpp": "cpp",
     "c": "c",
     "java": "java",
-    "python3": "py"
+    "python3": "py",
+    "openJDK-8":"java"
 };
 
 
@@ -60,7 +61,7 @@ function runCode(json_msg, channel, msg) {
                                     output = contents;
                                     let result = {
                                         'output': output,
-                                        'stdout':stdout,
+                                        'status':stdout,
                                         'stderr':stderr,
                                         'submission_id': json_msg.filename
                                     }
@@ -80,7 +81,7 @@ function runCode(json_msg, channel, msg) {
                                                     if (err6) {
                                                         console.log(err6);
                                                     } else {
-                                                        console.log( files[i]+' file DELETED');
+                                                        console.log( "DELETED files -> "+files[i]);
                                                     }
                                                 })
                                             }

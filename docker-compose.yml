@@ -41,23 +41,23 @@ services:
   
 
     
-  worker04:
-    build: ./worker
-    restart: always
-    # cpus: "1"
-    # mem_limit: 150m
+  # worker04:
+  #   build: ./worker
+  #   restart: always
+  #   # cpus: "1"
+  #   # mem_limit: 150m
 
-  worker05:
-    build: ./worker
-    restart: always
-    # cpus: "1"
-    # mem_limit: 150m
+  # worker05:
+  #   build: ./worker
+  #   restart: always
+  #   # cpus: "1"
+  #   # mem_limit: 150m
 
-  worker06:
-    build: ./worker
-    restart: always
-    # cpus: "1"
-    # mem_limit: 150m
+  # worker06:
+  #   build: ./worker
+  #   restart: always
+  #   # cpus: "1"
+  #   # mem_limit: 150m
 
  
 
