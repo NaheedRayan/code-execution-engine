@@ -58,21 +58,22 @@ except :
 if(status):
     try:
         if(extension == "cpp" or extension == "c"):
-            comp = subprocess.run(f"cd temp/ && g++ {filename}.{extension} -o {filename}"  ,shell=True , stdout=subprocess.PIPE,stderr=subprocess.STDOUT  , timeout=int("5"))
+            comp = subprocess.run(f"cd temp/ && g++ {filename}.{extension} -o {filename}"  ,shell=True , stdout=subprocess.PIPE,stderr=subprocess.STDOUT  , timeout=60)
             if(comp.stdout.decode()):
                 result = comp.stdout.decode()
                 status = False
 
         if(extension == "java"):
             changing_class_name()
-            comp = subprocess.run(f"cd temp/ && javac {filename}.java"  ,shell=True , stdout=subprocess.PIPE,stderr=subprocess.STDOUT ,timeout=5 )
+            comp = subprocess.run(f"cd temp/ && javac {filename}.java"  ,shell=True , stdout=subprocess.PIPE,stderr=subprocess.STDOUT ,timeout=60 )
     
             if(comp.stdout.decode()):
                 result = comp.stdout.decode()
                 status = False
         
-    except:
-        result = 'Something went wrong while compiling the file'
+    except Exception as e:
+        result = "Something went wrong while compiling the file\n"+str(e)
+        # print(e)
         status = False
 
 
