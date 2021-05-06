@@ -10,14 +10,17 @@ const eventEmitter = new EventEmitter();
 const app = express()
 const port = 8080
 
+const cors = require('cors');
+app.use(cors())
+
 // middleware
 app.use(express.json());
 
 
 // for redis
 const client = redis.createClient({
-	host: 'redis-server',
-	port: 6379
+    host: 'redis-server',
+    port: 6379
 })
 
 client.on('error', (err) => {
@@ -39,37 +42,44 @@ app.post('/submit', (req, res) => {
     // let data_src = req.body.src;
     // let data_src = req.body ;
     data_src = {
-        "src": req.body.src , 
-        "stdin":req.body.stdin,
-        "lang" : req.body.lang, 
-        "timeout": req.body.timeout, 
-        "filename": "Test"+random(10) 
+        "src": req.body.src,
+        "stdin": req.body.stdin,
+        "lang": req.body.lang,
+        "timeout": req.body.timeout,
+        "filename": "Test" + random(10)
     }
     // console.log(data_src);
-   
     
-    if (data_src) {
-        // sending data with the help of emitter
-        eventEmitter.emit('message_received', data_src);
-    }
+    if (req.body.src  && req.body.lang  && parseInt(req.body.timeout) <= 5) {
 
-    res.status(202).send('http://localhost:8080/results/'+data_src.filename);
-    
+        if (data_src) {
+            // sending data with the help of emitter
+            eventEmitter.emit('message_received', data_src);
+        }
+
+        res.status(202).send('http://localhost:8080/results/' + data_src.filename);
+    } else {
+
+        console.log("Invalid Request has been made")
+        let result = {
+            'output': "Invalid Request",
+            'status':"Invalid Request",
+        }
+        client.setex(data_src.filename.toString(), 300, JSON.stringify(result));
+
+        res.status(202).send('http://localhost:8080/results/' + data_src.filename);
+    }
 })
 
-app.get("/results/:filename", (req,res)=>{
-    
+app.get("/results/:filename", (req, res) => {
+
     let filename = req.params.filename;
     client.get(filename, (err, status) => {
-        if (status==null) 
-        {
+        if (status == null) {
             res.status(202).send('{"status":"Queued"}');
-        }
-        else if(status=='{"status":"Processing"}')
-        {
+        } else if (status == '{"status":"Processing"}') {
             res.status(202).send('{"status":"Processing"}');
-        }
-        else 
+        } else
             res.status(200).send(status);
     });
 })
@@ -85,12 +95,12 @@ amqp.connect('amqp://rabbitmq:5672', function (error0, connection) {
         console.log('An error occured while connecting rabbitmq');
         console.log(error0);
     }
-    
+
     connection.createChannel(function (error1, channel) {
         if (error1) {
             console.log('An error occured while creating channel');
             console.log(error1);
-            
+
         }
         var queue = 'task_queue';
         // var msg = 'The message number is ' +num ;
@@ -101,8 +111,8 @@ amqp.connect('amqp://rabbitmq:5672', function (error0, connection) {
         console.log('------------------------------------------------Connected server----------------------------------------------------')
         eventEmitter.on("message_received", (data) => {
             channel.sendToQueue(queue, Buffer.from(JSON.stringify(data)));
-            console.log("[x] Sent: %s file(%s) has been sent", data.lang , data.filename);
-            
+            console.log("[x] Sent: %s file(%s) has been sent", data.lang, data.filename);
+
         })
 
     });

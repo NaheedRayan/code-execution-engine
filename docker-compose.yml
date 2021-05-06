@@ -25,7 +25,7 @@ services:
     build: ./worker
     restart: always
     pids_limit: 50
-    cpus: 0.5
+    #cpus: 0.5
     scale : 3
     init: true
     # cpus: "1"
