@@ -23,37 +23,8 @@ def changing_class_name():
     java_file_class_name = fl.stdout.decode().strip()
 
     # for renaming the file
-    # subprocess.run(f"cd temp/ && mv {filename}.java {java_file}.java"  ,shell=True , stdout=subprocess.PIPE,stderr=subprocess.STDOUT  , timeout=60)
+    subprocess.run(f"cd temp/ && mv {filename}.java {java_file_class_name}.java"  ,shell=True , stdout=subprocess.PIPE,stderr=subprocess.STDOUT  , timeout=60)
 
-
-    # file = open(f"temp/{filename}.java" , 'r')
-
-    # newfile = filename
-    # new_file_content = str()
-
-    # for line in file:
-    #     if re.search('^class ',line):
-    #         line = line.strip()
-    #         ls = line.split(" ")
-
-    #         # print(ls)
-    #         string = ls[1]
-    #         if(string[-1] == '{'):
-    #             new_line = line.replace(string , newfile+'{')
-    #             new_file_content += new_line + "\n"
-            
-    #         elif(string[-1]!='{'):
-
-    #             new_line = line.replace(string , newfile)
-    #             new_file_content += new_line + "\n"
-                
-    #     else:
-    #         new_file_content += line 
-
-    
-    # writing_file = open(f"temp/{filename}.java", "w")
-    # writing_file.write(new_file_content)
-    # writing_file.close()
 
 
 
@@ -80,7 +51,7 @@ if(status):
 
         if(extension == "java"):
             changing_class_name()
-            comp = subprocess.run(f"cd temp/ && javac {filename}.java"  ,shell=True , stdout=subprocess.PIPE,stderr=subprocess.STDOUT ,timeout=60 )
+            comp = subprocess.run(f"cd temp/ && javac {java_file_class_name}.java"  ,shell=True , stdout=subprocess.PIPE,stderr=subprocess.STDOUT ,timeout=60 )
     
             if(comp.stdout.decode()):
                 result = comp.stdout.decode()
