@@ -8,37 +8,52 @@ extension = str(sys.argv[2])
 timeout = str(sys.argv[3])
 
 
+java_file_class_name = str()
+
+
 # for java
 def changing_class_name():
 
-    file = open(f"temp/{filename}.java" , 'r')
+    grep_syntax = """'(?<=\\n|\A|\\t)\s?(public\s+)*(class|interface)\s+\K([^\\n\s{]+)'"""
 
-    newfile = filename
-    new_file_content = str()
+    fl = subprocess.run(f"cd temp/ && grep -P -m 1  -o {grep_syntax} {filename}.java"  ,shell=True , stdout=subprocess.PIPE,stderr=subprocess.STDOUT  , timeout=60)
 
-    for line in file:
-        if re.search('^class ',line):
-            line = line.strip()
-            ls = line.split(" ")
 
-            # print(ls)
-            string = ls[1]
-            if(string[-1] == '{'):
-                new_line = line.replace(string , newfile+'{')
-                new_file_content += new_line + "\n"
+    global java_file_class_name
+    java_file_class_name = fl.stdout.decode().strip()
+
+    # for renaming the file
+    # subprocess.run(f"cd temp/ && mv {filename}.java {java_file}.java"  ,shell=True , stdout=subprocess.PIPE,stderr=subprocess.STDOUT  , timeout=60)
+
+
+    # file = open(f"temp/{filename}.java" , 'r')
+
+    # newfile = filename
+    # new_file_content = str()
+
+    # for line in file:
+    #     if re.search('^class ',line):
+    #         line = line.strip()
+    #         ls = line.split(" ")
+
+    #         # print(ls)
+    #         string = ls[1]
+    #         if(string[-1] == '{'):
+    #             new_line = line.replace(string , newfile+'{')
+    #             new_file_content += new_line + "\n"
             
-            elif(string[-1]!='{'):
+    #         elif(string[-1]!='{'):
 
-                new_line = line.replace(string , newfile)
-                new_file_content += new_line + "\n"
+    #             new_line = line.replace(string , newfile)
+    #             new_file_content += new_line + "\n"
                 
-        else:
-            new_file_content += line 
+    #     else:
+    #         new_file_content += line 
 
     
-    writing_file = open(f"temp/{filename}.java", "w")
-    writing_file.write(new_file_content)
-    writing_file.close()
+    # writing_file = open(f"temp/{filename}.java", "w")
+    # writing_file.write(new_file_content)
+    # writing_file.close()
 
 
 
@@ -89,7 +104,7 @@ if(status):
             result = output.stdout.decode()
 
         elif(extension == "java"):
-            output = subprocess.run(f"cd temp/ && java {filename}"  ,shell=True , stdout=subprocess.PIPE,stderr=subprocess.PIPE , input=(inputfile.stdout.decode()).encode() , timeout=int(timeout))
+            output = subprocess.run(f"cd temp/ && java {java_file_class_name}"  ,shell=True , stdout=subprocess.PIPE,stderr=subprocess.PIPE , input=(inputfile.stdout.decode()).encode() , timeout=int(timeout))
             result = output.stdout.decode()
 
         # if there is any error we will also add the error
