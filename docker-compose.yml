@@ -29,7 +29,7 @@ services:
     scale : 3
     init: true
     # cpus: "1"
-    mem_limit: 250M   
+    mem_limit: 150M  
 
   # worker02:
   #   build: ./worker

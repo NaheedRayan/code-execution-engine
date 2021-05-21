@@ -56,8 +56,9 @@ app.post('/submit', (req, res) => {
             // sending data with the help of emitter
             eventEmitter.emit('message_received', data_src);
         }
-
-        res.status(202).send('http://localhost:8080/results/' + data_src.filename);
+    
+        res.status(202).send(req.protocol + '://' + req.get('host') + "/results/" + data_src.filename);
+        // res.status(202).send('http://localhost:8080/results/' + data_src.filename);
     } else {
 
         console.log("Invalid Request has been made")
@@ -67,7 +68,12 @@ app.post('/submit', (req, res) => {
         }
         client.setex(data_src.filename.toString(), 300, JSON.stringify(result));
 
-        res.status(202).send('http://localhost:8080/results/' + data_src.filename);
+        var host = window.location.protocol + "//" + window.location.host;
+        console.log(host)
+
+        // res.status(202).send('http://localhost:8080/results/' + data_src.filename);
+        res.status(202).send(req.protocol + '://' + req.get('host')+ "/results/" + data_src.filename);
+
     }
 })
 
