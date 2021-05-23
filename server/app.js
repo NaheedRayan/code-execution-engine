@@ -32,7 +32,34 @@ function random(size) {
 }
 
 app.get('/', (req, res) => {
-    res.send('Hello World from the server.');
+    var os = require('os-utils');
+
+
+    let cpu_usage
+    let cpu_free
+
+    os.cpuUsage(function (v) {
+        cpu_usage = v * 100;
+        os.cpuFree(function (v) {
+            cpu_free = v * 100;
+            data = {
+                "OS platform": os.platform(),
+                "CPU usage (%)": cpu_usage,
+                "CPU free  (%)": cpu_free,
+                "CPU count": os.cpuCount() ,
+                "Free memory (mb)": os.freemem(),
+                "Total memory (mb)": os.totalmem(),
+                "Free memory (%)": os.freememPercentage()*100,
+                "OS Uptime (hour)": os.sysUptime()/3600,
+                "Avg Load (15min)": os.loadavg(15)*100
+            }
+            console.log(data);
+            res.send(data);
+        })
+    })
+
+
+    // res.send('Hello World from the server.');
     console.log("A get request has been made");
 })
 
