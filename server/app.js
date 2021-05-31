@@ -95,8 +95,8 @@ app.post('/submit', (req, res) => {
         }
         client.setex(data_src.filename.toString(), 300, JSON.stringify(result));
 
-        var host = window.location.protocol + "//" + window.location.host;
-        console.log(host)
+        // var host = window.location.protocol + "//" + window.location.host;
+        // console.log(host)
 
         // res.status(202).send('http://localhost:8080/results/' + data_src.filename);
         res.status(202).send(req.protocol + '://' + req.get('host')+ "/results/" + data_src.filename);
