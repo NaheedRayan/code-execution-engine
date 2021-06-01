@@ -11,7 +11,9 @@ const app = express()
 const port = 8080
 
 const cors = require('cors');
-const { fdatasync } = require('fs');
+const {
+    fdatasync
+} = require('fs');
 app.use(cors())
 
 // middleware
@@ -32,9 +34,6 @@ function random(size) {
     return require("crypto").randomBytes(size).toString('hex');
 }
 
-// for printing json beautifully in response 
-// app.locals.pretty = true;
-app.set('json spaces', 2);
 
 app.get('/', (req, res) => {
     var os = require('os-utils');
@@ -48,51 +47,54 @@ app.get('/', (req, res) => {
         os.cpuFree(function (v) {
             cpu_free = v * 100;
             data = {
-                "logo":{
-                    "10":`  ............................................................................  `, 
-                    "11":`  .%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%.  `,  
-                    "12":`   ..%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%..   `,
-                    "13":`     ..................................  ..................................     `,
-                    "14":`       .%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%.  .%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%.       `,
-                    "15":`          .%%%%%%%%%%%%%%%%%%%%%%%%%%%.  .%%%%%%%%%%%%%%%%%%%%%%%%%%%.          `, 
-                    "16":`            ,,,,,,,,,,,,,,,,,,,,%%%%%%.  .%%%%%%,,,,,,,,,,,,,,,,,,,,            `,       
-                    "17":`                               .%%%%%%.  .%%%%%%.                               `,          
-                    "18":`                               .%%%%%%.  .%%%%%%.                               `,          
-                    "19":`                               .%%%%%%.  .%%%%%%.                               `,          
-                    "20":`                               .%%%%%%.  .%%%%%%.                               `,          
-                    "21":`                               .%%%%%%.  .%%%%%%.                               `,          
-                    "22":`                               .%%%%%%.  .%%%%%%.                               `,          
-                    "23":`                               .%%%%%%.  .%%%%%%.                               `,          
-                    "24":`                               .%%%%%%.  .%%%%%%.                               `,          
-                    "25":`                               .%%%%%%.  .%%%%%%.                               `,          
-                    "26":`                               .%%%%%%.  .%%%%%%.                               `,          
-                    "27":`                               .%%%%%%.  .%%%%%%.                               `,          
-                    "28":`                               .%%%%%%.  .%%%%%%.                               `,           
-                    "29":`                                 %%%%%.  .%%%%%                                 `,            
-                    "30":`                                  .%%%.  .%%%.                                  `,            
-                    "31":`                                     %.  .%                                     `,            
-                    "32":`                                                                                `,
-                    "33":`                                                                                `,                 
-                    "34":`                    ████████╗██╗████████╗ █████╗ ███╗   ██╗                     `,
-                    "35":`                    ╚══██╔══╝██║╚══██╔══╝██╔══██╗████╗  ██║                     `,
-                    "36":`                       ██║   ██║   ██║   ███████║██╔██╗ ██║                     `,
-                    "37":`                       ██║   ██║   ██║   ██╔══██║██║╚██╗██║                     `,
-                    "38":`                       ██║   ██║   ██║   ██║  ██║██║ ╚████║                     `,
-                    "39":`                       ╚═╝   ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝                     `,
-                    "40":`                           Titan Code Execution Engine                          `
-                },
-                "OS platform"       : os.platform(),
-                "CPU usage (%)"     : cpu_usage,
-                "CPU free  (%)"     : cpu_free,
-                "CPU count"         : os.cpuCount() ,
-                "Free memory (mb)"  : os.freemem(),
-                "Total memory (mb)" : os.totalmem(),
-                "Free memory (%)"   : os.freememPercentage()*100,
-                "OS Uptime (hour)"  : os.sysUptime()/3600,
-                "Avg Load (15min)"  : os.loadavg(15)*100
+
+                "10": `  ............................................................................  `,
+                "11": `   #████████████████████████████████████████████████████████████████████████#   `,
+                "12": `    #██████████████████████████████████████████████████████████████████████#    `,
+                "13": `      .................................  .................................      `,
+                "14": `        #█████████████████████████████.  .█████████████████████████████#        `,
+                "15": `           #██████████████████████████.  .██████████████████████████#           `,
+                "16": `             ,,,,,,,,,,,,,,,,,,,██████.  .██████,,,,,,,,,,,,,,,,,,,             `,
+                "17": `                               .██████.  .██████.                               `,
+                "18": `                               .██████.  .██████.                               `,
+                "19": `                               .██████.  .██████.                               `,
+                "20": `                               .██████.  .██████.                               `,
+                "21": `                               .██████.  .██████.                               `,
+                "22": `                               .██████.  .██████.                               `,
+                "23": `                               .██████.  .██████.                               `,
+                "24": `                               .██████.  .██████.                               `,
+                "25": `                               .██████.  .██████.                               `,
+                "26": `                               .██████.  .██████.                               `,
+                "27": `                               .██████.  .██████.                               `,
+                "28": `                               .██████.  .██████.                               `,
+                "29": `                                 #████.  .████#                                 `,
+                "30": `                                   #██.  .██#                                   `,
+                "31": `                                     #.  .#                                     `,
+                "32": `                                                                                `,
+                "33": `                                                                                `,
+                "34": `                    ████████╗██╗████████╗ █████╗ ███╗   ██╗                     `,
+                "35": `                    ╚══██╔══╝██║╚══██╔══╝██╔══██╗████╗  ██║                     `,
+                "36": `                       ██║   ██║   ██║   ███████║██╔██╗ ██║                     `,
+                "37": `                       ██║   ██║   ██║   ██╔══██║██║╚██╗██║                     `,
+                "38": `                       ██║   ██║   ██║   ██║  ██║██║ ╚████║                     `,
+                "39": `                       ╚═╝   ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝                     `,
+                "40": `                           Titan Code Execution Engine                          `,
+                "OS platform": os.platform(),
+                "CPU usage (%)": cpu_usage,
+                "CPU free  (%)": cpu_free,
+                "CPU count": os.cpuCount(),
+                "Free memory (mb)": os.freemem(),
+                "Total memory (mb)": os.totalmem(),
+                "Free memory (%)": os.freememPercentage() * 100,
+                "OS Uptime (hour)": os.sysUptime() / 3600,
+                "Avg Load (15min)": os.loadavg(15) * 100
             }
             console.log(data);
-            res.send(data);
+            // for printing json beautifully in response 
+            res.set({
+                'Content-Type': 'application/json; charset=utf-8'
+            })
+            res.status(200).send(JSON.stringify(data, undefined, ' '));
         })
     })
 
@@ -114,14 +116,14 @@ app.post('/submit', (req, res) => {
         "filename": "Test" + random(10)
     }
     // console.log(data_src);
-    
-    if (req.body.src  && req.body.lang  && parseInt(req.body.timeout) <= 5) {
+
+    if (req.body.src && req.body.lang && parseInt(req.body.timeout) <= 5) {
 
         if (data_src) {
             // sending data with the help of emitter
             eventEmitter.emit('message_received', data_src);
         }
-    
+
         res.status(202).send(req.protocol + '://' + req.get('host') + "/results/" + data_src.filename);
         // res.status(202).send('http://localhost:8080/results/' + data_src.filename);
     } else {
@@ -129,14 +131,14 @@ app.post('/submit', (req, res) => {
         console.log("Invalid Request has been made")
         let result = {
             'output': "Invalid Request",
-            'status':"Invalid Request",
+            'status': "Invalid Request",
         }
         client.setex(data_src.filename.toString(), 300, JSON.stringify(result));
 
-       
+
 
         // res.status(202).send('http://localhost:8080/results/' + data_src.filename);
-        res.status(202).send(req.protocol + '://' + req.get('host')+ "/results/" + data_src.filename);
+        res.status(202).send(req.protocol + '://' + req.get('host') + "/results/" + data_src.filename);
 
     }
 })
@@ -154,7 +156,7 @@ app.get("/results/:filename", (req, res) => {
     });
 })
 
-app.listen(port, () => {
+app.listen(port, '0.0.0.0', () => {
     console.log(`Server app listening at http://localhost:${port}`)
 })
 
