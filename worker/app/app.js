@@ -66,7 +66,7 @@ function runCode(json_msg, channel, msg) {
                                         'submission_id': json_msg.filename
                                     }
 
-                                    console.log(result);
+                                    // console.log(result);
                                     client.setex(json_msg.filename.toString(), 300, JSON.stringify(result));
 
                                     console.log('message acknowledged')
