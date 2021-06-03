@@ -49,7 +49,7 @@ function runCode(json_msg, channel, msg) {
                             console.log(err3);
                         } else {
 
-                            console.log('--------------------------------------------------------------------------------------------------------------------')
+                            console.log(`-------------------------${json_msg.lang}-------------------------------`)
                             // console.log(stdout);
                             // console.log(stderr);
                             fs.readFile("./temp/output.txt", "utf8", function (err4, contents) {
