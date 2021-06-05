@@ -89,13 +89,21 @@ if(status):
         status = False
         # print(e)
 
-    
+
+
+a = sys.getsizeof(result)
+a = a/1048567 #converting bytes to mb
+
+if(a > 5): #if the data is greater than 5mb then the data will not be written in output.txt
+    result = "Out of memory"
+    status = False    
 
 # getting the result and writting it on output.txt
 file = open("./temp/output.txt" , "w")
 file.write(result)
 file.close()
 
+result = None
 
 if(status == True):
     print('Successful' ,end="")

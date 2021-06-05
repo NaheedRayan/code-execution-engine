@@ -75,17 +75,10 @@ function runCode(json_msg, channel, msg) {
                                 if (err4)
                                     console.log(err4);
                                 else {
-                                    if(fileSizeInMegabytes < 10){//if the file is smaller than 10mb
-                                        output = contents;
-                                        status_data = stdout;
-                                    }
-                                    else {
-                                        output = "Out of Memory";
-                                        status_data = "Failed";
-                                    }
+                                    
                                     let result = {
-                                        'output': output,
-                                        'status':status_data,
+                                        'output': contents,
+                                        'status':stdout,
                                         'stderr':stderr,
                                         'submission_id': json_msg.filename
                                     }
