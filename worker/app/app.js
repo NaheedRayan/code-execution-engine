@@ -26,7 +26,7 @@ function runCode(json_msg, channel, msg) {
 
     client.setex(json_msg.filename.toString(), 300, '{"status":"Processing"}');
 
-    var command = "python3 run.py " + json_msg.filename + " " + extensions[json_msg.lang] + " " + json_msg.timeout;
+    let command = "python3 run.py " + json_msg.filename + " " + extensions[json_msg.lang] + " " + json_msg.timeout;
 
 
     // writing the input.txt file
@@ -89,6 +89,8 @@ function runCode(json_msg, channel, msg) {
                                         'stderr':stderr,
                                         'submission_id': json_msg.filename
                                     }
+
+                                    contents = null;
 
                                     // console.log(result);
                                     client.setex(json_msg.filename.toString(), 300, JSON.stringify(result));
