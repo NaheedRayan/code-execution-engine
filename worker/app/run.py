@@ -67,15 +67,15 @@ if(status):
 if(status):
     try:
         if(extension == "py"):
-            output = subprocess.run(f"cd temp/ && python3 {filename}.{extension}"  ,shell=True , stdout=subprocess.PIPE, stderr=subprocess.PIPE ,  input=(inputfile.stdout.decode()).encode() , timeout=int(timeout))
+            output = subprocess.run(f"cd temp/ && timeout -s KILL 3 python3 {filename}.{extension}"  ,shell=True , stdout=subprocess.PIPE, stderr=subprocess.PIPE ,  input=(inputfile.stdout.decode()).encode() , timeout=int(timeout))
             result = output.stdout.decode()
 
         elif(extension=="cpp" or extension == "c"):
-            output = subprocess.run(f"cd temp/ && ./{filename}"  ,shell=True , stdout=subprocess.PIPE,stderr=subprocess.PIPE , input=(inputfile.stdout.decode()).encode() , timeout=int(timeout))
+            output = subprocess.run(f"cd temp/ && timeout -s KILL 3 ./{filename}"  ,shell=True , stdout=subprocess.PIPE,stderr=subprocess.PIPE , input=(inputfile.stdout.decode()).encode() , timeout=int(timeout))
             result = output.stdout.decode()
 
         elif(extension == "java"):
-            output = subprocess.run(f"cd temp/ && timeout -s KILL 5 java {java_file_class_name}"  ,shell=True , stdout=subprocess.PIPE,stderr=subprocess.PIPE , input=(inputfile.stdout.decode()).encode() , timeout=int(timeout))
+            output = subprocess.run(f"cd temp/ && timeout -s KILL 3 java {java_file_class_name}"  ,shell=True , stdout=subprocess.PIPE,stderr=subprocess.PIPE , input=(inputfile.stdout.decode()).encode() , timeout=int(timeout))
             result = output.stdout.decode()
 
         # if there is any error we will also add the error
