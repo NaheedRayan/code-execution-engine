@@ -61,10 +61,10 @@ function runCode(json_msg, channel, msg) {
                             console.log(`-------------------------${json_msg.lang}-------------------------------`)
 
                             // for showing file size
-                            var stats = fs.statSync("./temp/output.txt")
-                            var fileSizeInBytes = stats.size;
+                            let stats = fs.statSync("./temp/output.txt")
+                            let fileSizeInBytes = stats.size;
                             // Convert the file size to megabytes (optional)
-                            var fileSizeInMegabytes = fileSizeInBytes / (1024*1024);
+                            let fileSizeInMegabytes = fileSizeInBytes / (1024*1024);
                             console.log(`-------------------filesize: ${fileSizeInBytes} bytes------------------`)
                             console.log(`-------------------filesize: ${fileSizeInMegabytes} mb-----------------`)
 
