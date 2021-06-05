@@ -36,8 +36,7 @@ function random(size) {
 
 
 app.get('/', (req, res) => {
-    var os = require('os-utils');
-
+    var os = require('os-utils'); //for os details
 
     let cpu_usage
     let cpu_free
@@ -150,8 +149,10 @@ app.get("/results/:filename", (req, res) => {
         if (status == null) {
             res.status(202).send('{"status":"Queued"}');
         } else if (status == '{"status":"Processing"}') {
-            res.status(202).send('{"status":"Processing"}');
-        } else
+            res.status(202).send('{"status":"Processing"}'); 
+        }else if(status == '{"status":"Runtime Error"}'){
+            res.status(202).send('{"status":"Runtime Error"}');
+        }else
             res.status(200).send(status);
     });
 })

@@ -31,25 +31,43 @@ function runCode(json_msg, channel, msg) {
 
     // writing the input.txt file
     fs.writeFile("./temp/input.txt", json_msg.stdin.toString(), function (err1) {
-        if (err1)
+        if (err1){
+            console.log("in err1")
             console.log(err1)
-        else {
+            deletingTempFiles()
+        }else {
             // writing the source file
             fs.writeFile("./temp/" + json_msg.filename + "." + extensions[json_msg.lang], json_msg.src, function (err2) {
-                if (err2)
+                if (err2){
+                    console.log("in err2")
                     console.log(err2)
+                    deletingTempFiles()
+                }
                 else {
 
                     const {exec} = require('child_process');
                     // executing the command
                     exec(command, (err3, stdout, stderr) => {
                         if (err3) {
-                            channel.ack(msg);
-                            client.setex(json_msg.filename.toString(), 300, '{"status":"An error occured"}');
+                            console.log("in err3")
                             console.log(err3);
+                            
+                            channel.ack(msg);
+                            client.setex(json_msg.filename.toString(), 300, '{"status":"Runtime Error"}');
+                        
+                            deletingTempFiles()
                         } else {
 
                             console.log(`-------------------------${json_msg.lang}-------------------------------`)
+
+                            // for showing file size
+                            var stats = fs.statSync("./temp/output.txt")
+                            var fileSizeInBytes = stats.size;
+                            // Convert the file size to megabytes (optional)
+                            var fileSizeInMegabytes = fileSizeInBytes / (1024*1024);
+                            console.log(`-------------------filesize: ${fileSizeInBytes} bytes------------------`)
+                            console.log(`-------------------filesize: ${fileSizeInMegabytes} mb-----------------`)
+
                             // console.log(stdout);
                             // console.log(stderr);
                             fs.readFile("./temp/output.txt", "utf8", function (err4, contents) {
@@ -57,11 +75,17 @@ function runCode(json_msg, channel, msg) {
                                 if (err4)
                                     console.log(err4);
                                 else {
-
-                                    output = contents;
+                                    if(fileSizeInMegabytes < 10){//if the file is smaller than 10mb
+                                        output = contents;
+                                        status_data = stdout;
+                                    }
+                                    else {
+                                        output = "Out of Memory";
+                                        status_data = "Failed";
+                                    }
                                     let result = {
                                         'output': output,
-                                        'status':stdout,
+                                        'status':status_data,
                                         'stderr':stderr,
                                         'submission_id': json_msg.filename
                                     }
@@ -73,20 +97,8 @@ function runCode(json_msg, channel, msg) {
                                     channel.ack(msg);
 
                                     // now we have to delete the files inside the temp folder
-                                    fs.readdir('temp', (err5, files) => {
-                                        if (err5) console.log(err5);
-                                        else {
-                                            for (let i in files) {
-                                                fs.unlink('./temp/' + files[i], (err6) => {
-                                                    if (err6) {
-                                                        console.log(err6);
-                                                    } else {
-                                                        console.log( "DELETED files -> "+files[i]);
-                                                    }
-                                                })
-                                            }
-                                        }
-                                    })
+                                    deletingTempFiles()
+                                    
                                 }
                             })
                         }
@@ -95,6 +107,26 @@ function runCode(json_msg, channel, msg) {
             })
         }
     })
+}
+
+
+function deletingTempFiles(){
+    // now we have to delete the files inside the temp folder
+    fs.readdir('temp', (err5, files) => {
+        if (err5) console.log(err5);
+        else {
+            for (let i in files) {
+                fs.unlink('./temp/' + files[i], (err6) => {
+                    if (err6) {
+                        console.log(err6);
+                    } else {
+                        console.log( "DELETED files -> "+files[i]);
+                    }
+                })
+            }
+        }
+    })
+
 }
 
 
