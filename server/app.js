@@ -7,7 +7,7 @@ const eventEmitter = new EventEmitter();
 const compression = require('compression');
 
 
-app.use(compression())
+
 
 
 // const bodyParser = require('body-parser')
@@ -23,6 +23,7 @@ app.use(cors())
 // middleware
 app.use(express.json());
 
+app.use(compression())
 
 // for redis
 const client = redis.createClient({
