@@ -41,8 +41,11 @@ function random(size) {
     return require("crypto").randomBytes(size).toString('hex');
 }
 
+app.get('/' , (req,res)=>{
+    res.status(200).send("Hello from browser");
+})
 
-app.get('/', (req, res) => {
+app.get('/stats', (req, res) => {
     var os = require('os-utils'); //for os details
 
     let cpu_usage
