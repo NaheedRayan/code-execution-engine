@@ -147,13 +147,13 @@ app.get("/results/:filename", (req, res) => {
     let filename = req.params.filename;
     client.get(filename, (err, status) => {
         if (status == null) {
-            res.status(202).send('{"status":"Queued"}');
+            res.status(202).json({status:"Queued"});
         } else if (status == '{"status":"Processing"}') {
-            res.status(202).send('{"status":"Processing"}'); 
+            res.status(202).json({status:"Processing"}); 
         }else if(status == '{"status":"Runtime Error"}'){
-            res.status(202).send('{"status":"Runtime Error"}');
+            res.status(202).json({status:"Runtime Error"});
         }else
-            res.status(200).send(status);
+            res.status(200).json(JSON.parse(status));
     });
 })
 
