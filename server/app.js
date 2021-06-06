@@ -22,8 +22,10 @@ app.use(cors())
 
 // middleware
 app.use(express.json());
-
-app.use(compression())
+//for gzip compression
+app.use(compression({
+    level :9 
+}))
 
 // for redis
 const client = redis.createClient({

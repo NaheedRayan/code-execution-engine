@@ -1,6 +1,7 @@
 import sys
 import subprocess
 import re
+import gc
 
 # "python3 run.py "+ json_msg.filename +" "+extensions[json_msg.lang]+" "+json_msg.timeout 
 filename = str(sys.argv[1])
@@ -103,7 +104,8 @@ file = open("./temp/output.txt" , "w")
 file.write(result)
 file.close()
 
-result = None
+del result
+gc.collect()
 
 if(status == True):
     print('Successful' ,end="")
