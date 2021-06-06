@@ -24,7 +24,8 @@ app.use(cors())
 app.use(express.json());
 //for gzip compression
 app.use(compression({
-    level :9 
+    level :7,
+    threshold:30*1000 
 }))
 
 // for redis
