@@ -4,6 +4,10 @@ const amqp = require('amqplib/callback_api');
 const redis = require('redis');
 const EventEmitter = require('events');
 const eventEmitter = new EventEmitter();
+const compression = require('compression');
+
+
+app.use(compression())
 
 
 // const bodyParser = require('body-parser')
