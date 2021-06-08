@@ -7,6 +7,12 @@ const eventEmitter = new EventEmitter();
 const compression = require('compression');
 
 
+// for https 
+const https = require('https')
+const path = require('path');
+const fs = require('fs');
+ 
+
 
 
 
@@ -168,10 +174,20 @@ app.get("/results/:filename", (req, res) => {
     });
 })
 
-app.listen(port, '0.0.0.0', () => {
+// app.listen(port, '0.0.0.0', () => {
+//     console.log(`Server app listening at http://localhost:${port}`)
+// })
+
+
+const sslServer = https.createServer({
+    key :fs.readFileSync(path.join(__dirname , 'cert' , 'key.pem')),
+    cert:fs.readFileSync(path.join(__dirname , 'cert' , 'cert.pem')),  
+} , app)
+
+
+sslServer.listen(port, '0.0.0.0', () => {
     console.log(`Server app listening at http://localhost:${port}`)
 })
-
 
 // for the rabbitmq
 amqp.connect('amqp://rabbitmq:5672', function (error0, connection) {
