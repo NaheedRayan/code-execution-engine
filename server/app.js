@@ -11,14 +11,12 @@ const compression = require('compression');
 const https = require('https')
 const path = require('path');
 const fs = require('fs');
- 
-
-
-
 
 // const bodyParser = require('body-parser')
 const app = express()
-const port = 8080
+
+const port1 = 9090   //for http
+const port2 = 8080   //for https
 
 const cors = require('cors');
 const {
@@ -174,9 +172,9 @@ app.get("/results/:filename", (req, res) => {
     });
 })
 
-// app.listen(port, '0.0.0.0', () => {
-//     console.log(`Server app listening at http://localhost:${port}`)
-// })
+app.listen(port1, () => {
+    console.log(`Server app listening at http://localhost:${port1}`)//port : 9090
+})
 
 
 const sslServer = https.createServer({
@@ -185,8 +183,8 @@ const sslServer = https.createServer({
 } , app)
 
 
-sslServer.listen(port, '0.0.0.0', () => {
-    console.log(`Server app listening at http://localhost:${port}`)
+sslServer.listen(port2, () => {
+    console.log(`Server app listening at https://localhost:${port2}`)//port : 8080
 })
 
 // for the rabbitmq
