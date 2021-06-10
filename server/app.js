@@ -50,6 +50,10 @@ app.get('/' , (req,res)=>{
     res.status(200).send("Hello from browser");
 })
 
+app.get('/redirect' , (req,res)=>{
+    res.redirect("https://titan-engine.herokuapp.com/");
+})
+
 app.get('/stats', (req, res) => {
     var os = require('os-utils'); //for os details
 
