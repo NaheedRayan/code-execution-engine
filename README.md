@@ -1,5 +1,7 @@
 # code-execution-engine
 An API which executes codes in a sandbox environment 🙀🤯. 
+## Leave a star if U like it 😀
+<br>
 
 
 # Running the API
@@ -163,3 +165,17 @@ Everything is OK
 **https**  The port 8080 uses self signed ssl certificate.
 
 **http**  The port 9090 can be used for debugging.     
+
+<br>
+<br>
+<br>
+<br>
+
+# Architecture
+
+![](images/03.png)
+
+
+<br>
+
+# The End
