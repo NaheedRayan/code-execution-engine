@@ -114,32 +114,52 @@ Run this response in postman or browser
 
 
 ## Different types of status:
+<br>
+
 
     "status": "Invalid Request"
-    
+
 If the field in post request is empty then it will show invalid request
+
 <br>
 
     "status":"Queued"
 
 If the request is in waiting stage i.e. in queue.
+
 <br>
 
     "status":"Processing"
 
 If the script is running
+
 <br>
 
     "status":"Runtime Error"
     
 If the exec command fails for some reason in worker nodes
+
 <br>
 
     "status":"Failed"
 
 Causes due to compilation error or runtime error.
+
 <br>
 
     "status":"Successful"
 
 Everything is OK
+
+
+<br>
+<br>
+<br>
+
+# PORT 8080 and PORT 9090
+
+## The docker-compose exposes 2 ports
+
+**https**  The port 8080 uses self signed ssl certificate.
+
+**http**  The port 9090 can be used for debugging.     
