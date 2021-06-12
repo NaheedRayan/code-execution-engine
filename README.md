@@ -74,4 +74,72 @@ If its running on localhost then ping the server using
 # Understanding post request and responses
 
 
+## Post
 
+![](images/01.png)
+
+```src``` contains the scripts in raw formate.
+
+```stdin``` contains the inputs in raw formate.
+
+```lang``` the programming language.
+
+```timeout``` number of seconds the program will run.(Max 5 sec)
+
+
+<br>
+<br>
+
+## Response
+
+we will get a response like
+
+    http://localhost:900/results/Test646d62525e1b09171058
+
+Run this response in postman or browser
+
+![](images/02.png)
+
+```output``` The output of the script
+
+```status``` status of the output
+
+```stderr``` error in code
+
+```submission_id``` the unique submission id
+
+<br>
+<br>
+<br>
+
+
+## Different types of status:
+
+    "status": "Invalid Request"
+    
+If the field in post request is empty then it will show invalid request
+<br>
+
+    "status":"Queued"
+
+If the request is in waiting stage i.e. in queue.
+<br>
+
+    "status":"Processing"
+
+If the script is running
+<br>
+
+    "status":"Runtime Error"
+    
+If the exec command fails for some reason in worker nodes
+<br>
+
+    "status":"Failed"
+
+Causes due to compilation error or runtime error.
+<br>
+
+    "status":"Successful"
+
+Everything is OK
