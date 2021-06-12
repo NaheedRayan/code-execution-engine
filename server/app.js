@@ -47,7 +47,7 @@ function random(size) {
 }
 
 app.get('/' , (req,res)=>{
-    res.status(200).send("Hello from browser");
+    res.status(200).send("Hello from Titan-Engine");
 })
 
 app.get('/redirect' , (req,res)=>{
