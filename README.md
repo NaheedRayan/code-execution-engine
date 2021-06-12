@@ -3,6 +3,11 @@ An API which executes codes in a sandbox environment 🙀🤯.
 ## Leave a star if U like it 😀
 <br>
 
+# Architecture
+
+![](images/03.png)
+
+<br>
 
 # Running the API
 <br>
@@ -171,11 +176,5 @@ Everything is OK
 <br>
 <br>
 
-# Architecture
-
-![](images/03.png)
-
-
-<br>
 
 # The End
