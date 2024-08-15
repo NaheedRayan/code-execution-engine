@@ -1,113 +1,89 @@
+#!/usr/bin/env python3
 import sys
 import subprocess
-import re
 import gc
 
-# "python3 run.py "+ json_msg.filename +" "+extensions[json_msg.lang]+" "+json_msg.timeout 
-filename = str(sys.argv[1])
-extension = str(sys.argv[2])
-timeout = str(sys.argv[3])
+def changing_class_name(filename):
+    """Extract and rename Java class file."""
+    grep_syntax = r"'(?<=\n|\A|\t)\s?(public\s+)*(class|interface)\s+\K([^\n\s{]+)'"
+    cmd = f"cd temp/ && grep -P -m 1 -o {grep_syntax} {filename}.java"
+    result = subprocess.run(cmd, shell=True, capture_output=True, text=True, timeout=60)
+    java_file_class_name = result.stdout.strip()
+    subprocess.run(f"cd temp/ && mv {filename}.java {java_file_class_name}.java", shell=True, check=True, timeout=60)
+    return java_file_class_name
 
-
-java_file_class_name = str()
-
-
-# for java
-def changing_class_name():
-
-    grep_syntax = """'(?<=\\n|\A|\\t)\s?(public\s+)*(class|interface)\s+\K([^\\n\s{]+)'"""
-
-    fl = subprocess.run(f"cd temp/ && grep -P -m 1  -o {grep_syntax} {filename}.java"  ,shell=True , stdout=subprocess.PIPE,stderr=subprocess.STDOUT  , timeout=60)
-
-
-    global java_file_class_name
-    java_file_class_name = fl.stdout.decode().strip()
-
-    # for renaming the file
-    subprocess.run(f"cd temp/ && mv {filename}.java {java_file_class_name}.java"  ,shell=True , stdout=subprocess.PIPE,stderr=subprocess.STDOUT  , timeout=60)
-
-
-
-
-status = True
-
-# we have to get the input file first
-try:
-    inputfile = subprocess.run(f"cd temp/ && cat input.txt"  ,shell=True , stdout=subprocess.PIPE,stderr=subprocess.STDOUT  , timeout=int("5"))
-    
-except :
-    result = 'Something went wrong while reading input file'
-    status = False
-    # print('Something went wrong while reading input file')
-
-
-# for compiling the file
-if(status):
+def read_input_file():
+    """Read the input file."""
     try:
-        if(extension == "cpp" or extension == "c"):
-            comp = subprocess.run(f"cd temp/ && g++ {filename}.{extension} -o {filename}"  ,shell=True , stdout=subprocess.PIPE,stderr=subprocess.STDOUT  , timeout=60)
-            if(comp.stdout.decode()):
-                result = comp.stdout.decode()
-                status = False
+        result = subprocess.run("cd temp/ && cat input.txt", shell=True, capture_output=True, text=True, timeout=5)
+        return result.stdout, True
+    except subprocess.TimeoutExpired:
+        return 'Something went wrong while reading input file', False
 
-        if(extension == "java"):
-            changing_class_name()
-            comp = subprocess.run(f"cd temp/ && javac {java_file_class_name}.java"  ,shell=True , stdout=subprocess.PIPE,stderr=subprocess.STDOUT ,timeout=60 )
-    
-            if(comp.stdout.decode()):
-                result = comp.stdout.decode()
-                status = False
-        
-    except Exception as e:
-        result = "Something went wrong while compiling the file\n"+str(e)
-        # print(e)
-        status = False
+def compile_file(filename, extension):
+    """Compile the file based on its extension."""
+    if extension in ("cpp", "c"):
+        cmd = f"cd temp/ && g++ {filename}.{extension} -o {filename}"
+    elif extension == "java":
+        java_file_class_name = changing_class_name(filename)
+        cmd = f"cd temp/ && javac {java_file_class_name}.java"
+    else:
+        return "", True, None
 
-
-# running the file
-if(status):
     try:
-        if(extension == "py"):
-            output = subprocess.run(f"cd temp/ && timeout -s KILL 5 python3 {filename}.{extension}"  ,shell=True , stdout=subprocess.PIPE, stderr=subprocess.PIPE ,  input=(inputfile.stdout.decode()).encode() , timeout=int(timeout))
-            result = output.stdout.decode()
-
-        elif(extension=="cpp" or extension == "c"):
-            output = subprocess.run(f"cd temp/ && timeout -s KILL 5 ./{filename}"  ,shell=True , stdout=subprocess.PIPE,stderr=subprocess.PIPE , input=(inputfile.stdout.decode()).encode() , timeout=int(timeout))
-            result = output.stdout.decode()
-
-        elif(extension == "java"):
-            output = subprocess.run(f"cd temp/ && timeout -s KILL 5 java {java_file_class_name}"  ,shell=True , stdout=subprocess.PIPE,stderr=subprocess.PIPE , input=(inputfile.stdout.decode()).encode() , timeout=int(timeout))
-            result = output.stdout.decode()
-
-        # if there is any error we will also add the error
-        if(output.stderr.decode() != ""):
-            result += output.stderr.decode()
-            status = False
-        
-
+        result = subprocess.run(cmd, shell=True, capture_output=True, text=True, timeout=60)
+        return result.stdout, not result.stdout, java_file_class_name if extension == "java" else None
     except Exception as e:
-        result  = "Time limit exceeded"
-        status = False
-        # print(e)
+        return f"Something went wrong while compiling the file\n{str(e)}", False, None
 
+def run_file(filename, extension, timeout, input_data, java_file_class_name=None):
+    """Run the compiled file or script."""
+    try:
+        if extension == "py":
+            cmd = f"cd temp/ && timeout -s KILL 5 python3 {filename}.{extension}"
+        elif extension in ("cpp", "c"):
+            cmd = f"cd temp/ && timeout -s KILL 5 ./{filename}"
+        elif extension == "java":
+            cmd = f"cd temp/ && timeout -s KILL 5 java {java_file_class_name}"
+        else:
+            return "Unsupported file extension", False
 
+        result = subprocess.run(cmd, shell=True, input=input_data, capture_output=True, text=True, timeout=int(timeout))
+        output = result.stdout + result.stderr
+        return output, not result.stderr
+    except subprocess.TimeoutExpired:
+        return "Time limit exceeded", False
 
-a = sys.getsizeof(result)
-a = a/1048567 #converting bytes to mb
+def main(filename, extension, timeout):
+    input_data, status = read_input_file()
+    if not status:
+        return input_data, status
 
-if(a > 5): #if the data is greater than 5mb then the data will not be written in output.txt
-    result = "Out of memory"
-    status = False    
+    result, status, java_file_class_name = compile_file(filename, extension)
+    if not status:
+        return result, status
 
-# getting the result and writting it on output.txt
-file = open("./temp/output.txt" , "w")
-file.write(result)
-file.close()
+    result, status = run_file(filename, extension, timeout, input_data, java_file_class_name)
 
-del result
-gc.collect()
+    # Check if output size exceeds 5MB
+    if sys.getsizeof(result) / 1048576 > 5:
+        return "Out of memory", False
 
-if(status == True):
-    print('Successful' ,end="")
-else:
-    print("Failed",end="")
+    # Write result to output file
+    with open("./temp/output.txt", "w") as file:
+        file.write(result)
+
+    # Clean up memory
+    del result
+    gc.collect()
+
+    return "Successful" if status else "Failed", status
+
+if __name__ == "__main__":
+    if len(sys.argv) != 4:
+        print("Usage: python3 script.py <filename> <extension> <timeout>")
+        sys.exit(1)
+
+    filename, extension, timeout = sys.argv[1:4]
+    result, status = main(filename, extension, timeout)
+    print(result, end="")

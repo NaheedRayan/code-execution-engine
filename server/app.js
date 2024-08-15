@@ -15,8 +15,8 @@ const fs = require('fs');
 // const bodyParser = require('body-parser')
 const app = express()
 
-const port1 = 9090   //for http
-const port2 = 8080   //for https
+const port1 = 8080   //for http
+const port2 = 9090   //for https
 
 const cors = require('cors');
 const {
