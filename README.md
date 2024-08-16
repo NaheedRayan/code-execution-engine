@@ -19,6 +19,60 @@ If you need a simple frontend you can check https://github.com/NaheedRayan/onlin
 
 <br>
 
+```sql
+User
+  |
+  | Sends POST request with JSON content
+  |------------------------------------> localhost:9090/submit
+                                         |
+                                         | Receives response with a unique identifier and URL for status check
+                                         |<-----------------------------------
+                                         |
+                                         v
+                                  +-------------------+
+                                  |       API         |
+                                  |  (Node.js + Express)  
+                                  |                   |
+                                  | 1. Generates unique ID (e.g., Test1873426786c5f959d288)   
+                                  | 2. Sends task to RabbitMQ  
+                                  | 3. Generates URL for status check  
+                                  +-------------------+
+                                         |
+                                         |
+                                         v
+                                +---------------------+
+                                | RabbitMQ Task Queue |
+                                +---------------------+
+                                         |
+                                         |
+                                         v
+                               +---------------------+
+                               | Docker Containers   |
+                               |  (Task processing)  |
+                               +---------------------+
+                                         |
+                                         |
+                                         v
+                               +---------------------+
+                               | Redis Cache Server  |
+                               |  (Stores output)    |
+                               +---------------------+
+                                         |
+  User                                   |
+  |                                      |
+  | Sends GET request to check status    |
+  |------------------------------------> localhost:9090/results/Test1873426786c5f959d288
+                                         |
+                                         | API checks Redis for task status
+                                         |<-----------------------------------
+                                         |
+                                         v
+                                         Receives final output in JSON format
+
+```
+
+
+
 ## Running the API
 
 ### Prerequisites
